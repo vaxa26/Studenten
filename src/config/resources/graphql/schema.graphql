@@ -1,0 +1,97 @@
+schema {
+  query: Query
+  mutation: Mutation 
+}
+
+type Query {
+  studenten(suchkriteiern: SuchkriterienInput): [Student!]
+
+  student(id: ID!): Student
+}
+
+type Mutation {
+  create(input: StudentInput!): CreatePayload
+
+  update(input: StudentUpdateInput!): UpdatePayload
+
+  delete(id: ID!): Boolean
+
+  token(username: String!, password: String!): TokenResult
+  refresh(refresh_token: String!): TokenResult
+}
+
+type Name {
+  vorname: String!
+  nachname: String!
+}
+
+type Foto {
+  beschriftung: String!
+  contentType: String
+}
+
+type Student {
+  id: Int!
+  version: Int!
+  matrikelnr: Int!
+  studiengang: Studiengang
+  guthaben: Float!
+  bd: String
+  name: Name!
+}
+
+enum Studiengang {
+  WI
+  IIB
+  ET
+  MB
+}
+
+input SuchkriterienInput {
+  name: String
+  matrikelnr: String
+  studiengang: Studiengang
+  bd: String
+}
+
+input NameInput {
+  vorname: String!
+  nachname: String!
+}
+
+input FotoInput {
+  beschriftung: String!
+  contentType: String!
+}
+
+input StudentInput {
+  matrikelnr: String
+  studiengang: Studiengang
+  guthaben: Float
+  bd: String
+  name: NameInput!
+}
+
+type CreatePayload {
+  id: Int
+}
+
+input StudentUpdateInput {
+  id: ID
+  version: Int
+  matrikelnr: String
+  studiengang: Studiengang
+  guthaben: Float
+  bd: String
+}
+
+type UpdatePayload {
+  version: Int
+}
+
+type TokenResult {
+  acces_token: String!
+  expires_in: Int!
+  refresh_token: String!
+  refresh_expires_in: Int!
+}
