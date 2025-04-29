@@ -78,47 +78,45 @@ package express {
   Response .right[hidden].> Controller
 }
 
-package buch {
+package student {
   package entity #FFFFFF {
-    class Buch <<entity>>
+    class Student <<entity>>
 
-    Buch .[hidden].> Promise
-    Buch .[hidden].> Request
+    Student .[hidden].> Promise
+    Student .[hidden].> Request
   }
 
   package service {
-    class BuchWriteService << control >>
-    class BuchReadService << control >>
+    class StudentWriteService << control >>
+    class StudentReadService << control >>
   }
 
   package rest #DDDDDD {
-    class BuchWriteController << control >> << @Controller() >> << @UseGuards() >> << @UseInterceptors() >> {
-      + @Post() @Roles() async post(@Body() buch: Buch, @Req() req: Request,  @Res() res: Response): Promise<Response>
-      + @Put() @Roles() async put(@Body() buch: Buch, @Param() id: number, @Headers() version: string, @Res() res: Response): Promise<Response>
+    class StudentWriteController << control >> << @Controller() >> << @UseGuards() >> << @UseInterceptors() >> {
+      + @Post() @Roles() async post(@Body() student: Student, @Req() req: Request,  @Res() res: Response): Promise<Response>
+      + @Put() @Roles() async put(@Body() student: Student, @Param() id: number, @Headers() version: string, @Res() res: Response): Promise<Response>
       + @Delete() @Roles() async delete(@Param() id: number, @Res() res: Response): Promise<Response>
     }
 
-    BuchWriteController o--> "1" BuchWriteService : service
-    BuchWriteController o--> "1" BuchReadService : readService
-    BuchWriteController ..up> Buch
+    StudentWriteController o--> "1" StudentWriteService : service
+    StudentWriteController o--> "1" StudentReadService : readService
+    StudentWriteController ..up> Student
 
-    BuchWriteController ..> Controller
+    StudentWriteController ..> Controller
 
-    BuchWriteController .up.> AuthGuard
-    BuchWriteController .up.> Roles
+    StudentWriteController .up.> AuthGuard
+    StudentWriteController .up.> Roles
 
-    BuchWriteController ..> Request
-    BuchWriteController ..> Response
-    BuchWriteController ..> Promise
+    StudentWriteController ..> Request
+    StudentWriteController ..> Response
+    StudentWriteController ..> Promise
 
-    Buch .up[hidden].> Roles
-    BuchWriteService .[hidden].> Request
-    BuchWriteService .[hidden].> Promise
+    Student .up[hidden].> Roles
+    StudentWriteService .[hidden].> Request
+    StudentWriteService .[hidden].> Promise
   }
 }
 
 hide empty members
-
-footer (c) Juergen Zimmermann
 
 @enduml

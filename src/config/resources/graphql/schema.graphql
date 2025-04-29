@@ -90,7 +90,7 @@ type UpdatePayload {
 }
 
 type TokenResult {
-  acces_token: String!
+  access_token: String!
   expires_in: Int!
   refresh_token: String!
   refresh_expires_in: Int!

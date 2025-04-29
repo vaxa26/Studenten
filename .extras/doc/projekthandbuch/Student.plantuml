@@ -36,47 +36,39 @@ package typeorm {
   hide UpdateDateColumn circle
 }
 
-package buch.entity {
-  class "type BuchArt = 'KINDLE' | 'DRUCKAUSGABE'" as BuchArt
-  hide BuchArt circle
+package student.entity {
+  class "type Studiengang = 'WI' | 'MB' | 'IIB | 'ET'" as Studiengang
+  hide Studiengang circle
 
   class Buch <<entity>> <<@Entity>> {
     @Column() @PrimaryColumn() readonly id: number
     @Column() readonly version: number
-    @Column() readonly isbn: string
-    @Column() readonly rating: number
-    @Column() readonly art: BuchArt
-    @Column() readonly preis: number
-    @Column() readonly rabatt: number
-    @Column() readonly lieferbar: boolean
-    @Column() readonly datum: Date
-    @Column() readonly homepage?: string
-    @Column() readonly schlagwoerter?: string
-    @CreateDateColumn() readonly erzeugt: Date
-    @UpdateDateColumn() readonly aktualisiert: Date
+    @Column() readonly matrikelnummer: number
+    @Column() readonly studiengang: Studiengang
+    @Column() readonly guthaben: number
+    @Column() readonly bd: Date
+    @CreateDateColumn() readonly created: Date
+    @UpdateDateColumn() readonly updated: Date
   }
 
-  class Titel <<entity>> <<@Entity>> {
+  class Name <<entity>> <<@Entity>> {
     @Column() @PrimaryColumn() readonly id: number
-    @Column() readonly titel: string
-    @Column() readonly untertitel?: string
+    @Column() readonly Nachname: string
+    @Column() readonly Vorname?: string
   }
 
-  class Abbildung <<entity>> <<@Entity>> {
+  class Foto <<entity>> <<@Entity>> {
     @Column() @PrimaryColumn() readonly id: number
     @Column() readonly beschriftung: string
     @Column() readonly contentType?: string
   }
 
-  Buch *--> "1" Titel : @OneToOne() \ntitel
-  Buch *--> "*" Abbildung : @OneToMany() \nabbildungen
-
+  Buch *--> "1" Name : @OneToOne() \nname
+  Buch *--> "*" Foto : @OneToMany() \nfoto
   Buch .right.> Entity
-  Buch .right.> BuchArt
+  Buch .right.> Studiengang
 }
 
 hide empty members
-
-footer (c) Jürgen Zimmermann
 
 @enduml

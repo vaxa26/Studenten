@@ -45,14 +45,14 @@ export class StudentMutationResolver {
 
     @Mutation()
     @Roles('admin', 'user')
-        async create(@Args('input')studentDTO: StudentDTO) {
+    async create(@Args('input') studentDTO: StudentDTO) {
         this.#logger.debug('create: studentDTO=%o', studentDTO);
 
-        const student= this.#studentDtoToStudent(studentDTO);
+        const student = this.#studentDtoToStudent(studentDTO);
         const id = await this.#service.create(student);
         this.#logger.debug('createStuden: id=%d', id);
         const payload: CreatePayload = { id };
-        return payload
+        return payload;
     }
 
     @Mutation()
@@ -63,7 +63,7 @@ export class StudentMutationResolver {
         const student = this.#studentUpdateDtoTOStudent(studentDTO);
         const versionStr = `"${studentDTO.version.toString()}"`;
 
-        const versionResult= await this.#service.update({
+        const versionResult = await this.#service.update({
             id: Number.parseInt(studentDTO.id, 10),
             student,
             version: versionStr,
@@ -80,7 +80,10 @@ export class StudentMutationResolver {
         const idStr = id.id;
         this.#logger.debug('delete: id=%s', idStr);
         const deletePerformed = await this.#service.delete(idStr);
-        this.#logger.debug('deleteStudent: deletePerformed=%s', deletePerformed);
+        this.#logger.debug(
+            'deleteStudent: deletePerformed=%s',
+            deletePerformed,
+        );
         return deletePerformed;
     }
 
@@ -108,12 +111,11 @@ export class StudentMutationResolver {
             matrikelnr: studentDTO.matrikelnr,
             studiengang: studentDTO.studiengang,
             guthaben: Decimal(studentDTO.guthaben),
-            bd: studentDTO.bd,        
+            bd: studentDTO.bd,
             name,
             fotos,
             created: new Date(),
             updated: new Date(),
-    
         };
 
         student.name!.student = student;
@@ -127,11 +129,11 @@ export class StudentMutationResolver {
             matrikelnr: studentDTO.matrikelnr,
             studiengang: studentDTO.studiengang,
             guthaben: Decimal(studentDTO.guthaben),
-            bd: studentDTO.bd,        
+            bd: studentDTO.bd,
             name: undefined,
             fotos: undefined,
             created: undefined,
             updated: new Date(),
-        }
+        };
     }
 }

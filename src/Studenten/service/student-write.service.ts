@@ -1,15 +1,18 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { Student } from "../entity/studenten.entity.js";
-import { type DeleteResult, Repository } from "typeorm";
-import { StudentReadService } from "./student-read.service.js";
-import { getLogger } from "../../logger/logger.js";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Name } from "../entity/name.entity.js";
-import { Foto } from "../entity/foto.entity.js";
-import { matrikelnrException, VersionInvalidException, VersionOutdatedException } from "./exceptions.js";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Student } from '../entity/studenten.entity.js';
+import { type DeleteResult, Repository } from 'typeorm';
+import { StudentReadService } from './student-read.service.js';
+import { getLogger } from '../../logger/logger.js';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Name } from '../entity/name.entity.js';
+import { Foto } from '../entity/foto.entity.js';
+import {
+    matrikelnrException,
+    VersionInvalidException,
+    VersionOutdatedException,
+} from './exceptions.js';
 
 export type UpdateParams = {
-
     readonly id: number | undefined;
     readonly student: Student;
     readonly version: string;
@@ -25,7 +28,7 @@ export class StudentWriteService {
 
     //TODO Mailservice
 
-    readonly #logger = getLogger(StudentWriteService.name)
+    readonly #logger = getLogger(StudentWriteService.name);
 
     constructor(
         @InjectRepository(Student) repo: Repository<Student>,
@@ -38,12 +41,10 @@ export class StudentWriteService {
     }
 
     async create(student: Student) {
-        this.#logger.debug('create: student=%o', student)
+        this.#logger.debug('create: student=%o', student);
         await this.#validateCreate(student);
 
         const studentDb = await this.#repo.save(student);
-        await this.#validateCreate(student);
-
         return studentDb.id!;
     }
 
@@ -56,7 +57,9 @@ export class StudentWriteService {
         );
         if (id === undefined) {
             this.#logger.debug('update: ungueltige ID');
-            throw new NotFoundException(`Es gibt kein Student mit der ID ${id}.`);
+            throw new NotFoundException(
+                `Es gibt kein Student mit der ID ${id}.`,
+            );
         }
 
         const validateResult = await this.#validateUpdate(student, id, version);
@@ -66,10 +69,10 @@ export class StudentWriteService {
         }
 
         const StudentNeu = validateResult;
-        const merged = this.#repo.merge(StudentNeu,  student);
+        const merged = this.#repo.merge(StudentNeu, student);
         this.#logger.debug('update: merged=%o', merged);
         const updated = await this.#repo.save(merged);
-        this.#logger.debug('update: update=%o', updated)
+        this.#logger.debug('update: update=%o', updated);
 
         return updated.version!;
     }
@@ -83,7 +86,6 @@ export class StudentWriteService {
 
         let deleteResult: DeleteResult | undefined;
         await this.#repo.manager.transaction(async (transactionalMgr) => {
-
             const nameid = student.name?.id;
             if (nameid !== undefined) {
                 await transactionalMgr.delete(Name, nameid);
@@ -91,7 +93,7 @@ export class StudentWriteService {
 
             const fotos = student.fotos ?? [];
             for (const foto of fotos) {
-                await transactionalMgr.delete(Foto, foto.id)
+                await transactionalMgr.delete(Foto, foto.id);
             }
 
             deleteResult = await transactionalMgr.delete(Student, id);
@@ -105,7 +107,7 @@ export class StudentWriteService {
         );
     }
 
-    async #validateCreate ({ matrikelnr }: Student) {
+    async #validateCreate({ matrikelnr }: Student) {
         this.#logger.debug('#validateCreate: matrikelnr=%s', matrikelnr);
         if (await this.#repo.existsBy({ matrikelnr })) {
             throw new matrikelnrException(matrikelnr);
@@ -144,8 +146,6 @@ export class StudentWriteService {
             throw new VersionOutdatedException(version);
         }
         this.#logger.debug('#validateUpdate: studentDb=%o', studentDb);
-        return studentDb
+        return studentDb;
     }
-
-
 }

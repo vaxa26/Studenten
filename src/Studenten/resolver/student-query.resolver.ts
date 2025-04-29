@@ -34,7 +34,7 @@ export class StudentQueryResolver {
 
         const student = await this.#service.findById({ id });
 
-        if(this.#logger.isLevelEnabled('debug')) {
+        if (this.#logger.isLevelEnabled('debug')) {
             this.#logger.debug(
                 'findById: student=%s, name=%o',
                 student.toString(),

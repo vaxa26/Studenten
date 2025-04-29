@@ -15,25 +15,22 @@ import { DecimalTransformer } from './decimal-transformer.js';
 import { Name } from './name.entity.js';
 import { Foto } from './foto.entity.js';
 
-
-
 export type studiengang = 'WI' | 'IIB' | 'ET' | 'MB';
 
 @Entity()
 export class Student {
-
     @PrimaryGeneratedColumn()
     id: number | undefined;
 
     @VersionColumn()
     readonly version: number | undefined;
 
-    @Column( 'int' )
-    @ApiProperty({ example: 12345, type: Number})
+    @Column('int')
+    @ApiProperty({ example: 12345, type: Number })
     readonly matrikelnr!: number;
 
     @Column('varchar')
-    @ApiProperty({ example: 'WI', type: String})
+    @ApiProperty({ example: 'WI', type: String })
     readonly studiengang: studiengang | undefined;
 
     @Column('decimal', {
@@ -41,17 +38,17 @@ export class Student {
         scale: 2,
         transformer: new DecimalTransformer(),
     })
-    @ApiProperty({ example: 0.22, type: Number})
+    @ApiProperty({ example: 0.22, type: Number })
     readonly guthaben!: Decimal;
 
     @Column('date')
-    @ApiProperty({ example:'2004-26-07 ' })
+    @ApiProperty({ example: '2004-26-07 ' })
     readonly bd: Date | string | undefined;
 
-// - - -- - - - - - - - - - - - - - - - - - - - -- - 
+    // - - -- - - - - - - - - - - - - - - - - - - - -- -
 
-    @OneToOne(() => Name, (name) =>name.student, {
-        cascade: ['insert','remove'],
+    @OneToOne(() => Name, (name) => name.student, {
+        cascade: ['insert', 'remove'],
     })
     readonly name: Name | undefined;
 
@@ -60,8 +57,7 @@ export class Student {
     })
     readonly fotos: Foto[] | undefined;
 
-// - - -- - - - - - - - - - - - - - - - - - - - -- - 
-
+    // - - -- - - - - - - - - - - - - - - - - - - - -- -
 
     @CreateDateColumn({
         type: dbType === 'sqlite' ? 'datetime' : 'timestamp',
@@ -73,10 +69,9 @@ export class Student {
     })
     readonly updated: Date | undefined;
 
-// - - -- - - - - - - - - - - - - - - - - - - - -- - 
+    // - - -- - - - - - - - - - - - - - - - - - - - -- -
 
-
-    public toString=(): string =>
+    public toString = (): string =>
         JSON.stringify({
             id: this.id,
             version: this.version,
@@ -86,5 +81,5 @@ export class Student {
             bd: this.bd,
             created: this.created,
             updated: this.updated,
-        })
+        });
 }

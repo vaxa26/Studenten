@@ -19,14 +19,12 @@
 
 actor Gast
 
-boundary BuchGetController
-control BuchReadService
-database buch
+boundary StudentGetController
+control StudentReadService
+database student
 
-Gast -> BuchGetController : GET / getById()
-BuchGetController -> BuchReadService: findById()
-BuchReadService -> buch: [TypeORM]
-
-footer (c) Jürgen Zimmermann
+Gast -> StudentGetController : GET / getById()
+StudentGetController -> StudentReadService: findById()
+StudentReadService -> student: [TypeORM]
 
 @enduml

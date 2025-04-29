@@ -43,46 +43,45 @@ package nest-keycloak-connect {
   hide Roles circle
 }
 
-package buch #DDDDDD {
+package student #DDDDDD {
   package entity #FFFFFF {
-    class Buch <<entity>>
+    class Student <<entity>>
   }
 
   package service #FFFFFF {
-    class BuchWriteService << control >>
+    class StudentWriteService << control >>
   }
 
-  class "type BuchDTO = Omit<Buch, 'abbildungen' | 'aktualisiert' | 'erzeugt'" as BuchDTO
-  hide BuchDTO circle
+  class "type StudentDTO = Omit<Student, 'foto' | 'updated' | 'created'" as StudentDTO
+  hide StudentDTO circle
 
     interface IdInput {
         id: number
     }
 
-  class BuchMutationResolver << control >> << @Resolver() >> << @UseGuards() >> << @UseInterceptors() >> {
-    + @Mutation() @Roles() async create(@Args() buchDTO: BuchDTO): Promise<number>
-    + @Mutation() @Roles() async update(@Args() buchDTO: BuchDTO): Promise<number>
+  class StudentMutationResolver << control >> << @Resolver() >> << @UseGuards() >> << @UseInterceptors() >> {
+    + @Mutation() @Roles() async create(@Args() studentDTO: StudentDTO): Promise<number>
+    + @Mutation() @Roles() async update(@Args() studentDTO: StudentDTO): Promise<number>
     + @Mutation() @Roles() async delete(@Args() id: IdInput): Promise<boolean>
   }
 
-  BuchMutationResolver o-down-> "1" BuchWriteService : service
+  StudentMutationResolver o-down-> "1" StudentWriteService : service
 
-  BuchMutationResolver ..> Buch
-  BuchMutationResolver ..> BuchDTO
-  BuchMutationResolver ..> IdInput
-  BuchDTO .up.> Buch
-  BuchMutationResolver ..> Promise
-  BuchMutationResolver ..> Resolver
+  StudentMutationResolver ..> Student
+  StudentMutationResolver ..> StudentDTO
+  StudentMutationResolver ..> IdInput
+  StudentDTO .up.> Student
+  StudentMutationResolver ..> Promise
+  StudentMutationResolver ..> Resolver
 
-  BuchMutationResolver .up.> AuthGuard
-  BuchMutationResolver .up.> Roles
+  StudentMutationResolver .up.> AuthGuard
+  StudentMutationResolver .up.> Roles
 
-  BuchDTO .[hidden].> Promise
-  BuchDTO .[hidden].> Resolver
+  StudentDTO .[hidden].> Promise
+  StudentDTO .[hidden].> Resolver
 }
 
 hide empty members
 
-footer (c) Juergen Zimmermann
 
 @enduml

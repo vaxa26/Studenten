@@ -1,53 +1,50 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { getLogger } from "../../logger/logger.js";
-import { Student } from "../entity/studenten.entity.js";
-import { QueryBuilder } from "./query-builder.js";
-import { Suchkriterien } from "./suchkriterien.js";
-import { Pageable } from "./pageable.js";
-import { Slice } from "./slice.js";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { getLogger } from '../../logger/logger.js';
+import { Student } from '../entity/studenten.entity.js';
+import { QueryBuilder } from './query-builder.js';
+import { Suchkriterien } from './suchkriterien.js';
+import { Pageable } from './pageable.js';
+import { Slice } from './slice.js';
 
 export type FindByIdParams = {
-    readonly id: number,
-    readonly mitFotos?: boolean,
+    readonly id: number;
+    readonly mitFotos?: boolean;
 };
 
 @Injectable()
-export class StudentReadService{
-    static readonly ID_PATTERN= /^[1-9]\d{0,10}$/u;
+export class StudentReadService {
+    static readonly ID_PATTERN = /^[1-9]\d{0,10}$/u;
 
     readonly #queryBuilder: QueryBuilder;
 
     readonly #logger = getLogger(StudentReadService.name);
 
-    constructor(
-        queryBuilder: QueryBuilder,
-    ) {
+    constructor(queryBuilder: QueryBuilder) {
         this.#queryBuilder = queryBuilder;
     }
 
     async findById({
         id,
         mitFotos = false,
-    } : FindByIdParams): Promise<Readonly<Student>> {
+    }: FindByIdParams): Promise<Readonly<Student>> {
         this.#logger.debug('findById: id=$d', id);
 
         const student = await this.#queryBuilder
             .buildId({ id, mitFotos })
             .getOne();
-        if(student === null) {
-            throw new NotFoundException(`Es gibt kein Student mit der ID ${id}!`);
+        if (student === null) {
+            throw new NotFoundException(
+                `Es gibt kein Student mit der ID ${id}!`,
+            );
         }
-        if(this.#logger.isLevelEnabled('debug')) {
+        if (this.#logger.isLevelEnabled('debug')) {
             this.#logger.debug(
                 'findById: student=%s, name=%o',
                 student.toString(),
                 student.name,
             );
-            if(mitFotos) {
-                this.#logger.debug(
-                    'findById: fotos=%o',
-                    student.fotos,
-                );
+            if (mitFotos) {
+                this.#logger.debug('findById: fotos=%o', student.fotos);
             }
         }
         return student;
@@ -63,7 +60,7 @@ export class StudentReadService{
             pageable,
         );
 
-        if(suchkriterien === undefined) {
+        if (suchkriterien === undefined) {
             return await this.#findAll(pageable);
         }
         const keys = Object.keys(suchkriterien);
@@ -71,7 +68,7 @@ export class StudentReadService{
             return await this.#findAll(pageable);
         }
 
-        if(!this.#checkEnums(suchkriterien)) {
+        if (!this.#checkEnums(suchkriterien)) {
             throw new NotFoundException('ungeltige Suchkriterien');
         }
 
@@ -80,7 +77,7 @@ export class StudentReadService{
         if (studenten.length === 0) {
             this.#logger.debug('find: Keine Studenten gefunden');
             throw new NotFoundException(
-                `Keine Studenten gefunden: ${JSON.stringify(suchkriterien)}, Seite ${pageable.number}`, 
+                `Keine Studenten gefunden: ${JSON.stringify(suchkriterien)}, Seite ${pageable.number}`,
             );
         }
         const totalElements = await queryBuilder.getCount();
@@ -91,7 +88,9 @@ export class StudentReadService{
         const queryBuilder = this.#queryBuilder.build({}, pageable);
         const studenten = await queryBuilder.getMany();
         if (studenten.length === 0) {
-            throw new NotFoundException(`Ungueltige Seite "${pageable.number}"`);
+            throw new NotFoundException(
+                `Ungueltige Seite "${pageable.number}"`,
+            );
         }
         const totalElements = await queryBuilder.getCount();
         return this.#createSlice(studenten, totalElements);
@@ -110,13 +109,16 @@ export class StudentReadService{
 
     #checkEnums(suchkriterien: Suchkriterien) {
         const { studiengang } = suchkriterien;
-        this.#logger.debug('#checkEnums: Suchkriterien "studiengang=%s"', studiengang);
+        this.#logger.debug(
+            '#checkEnums: Suchkriterien "studiengang=%s"',
+            studiengang,
+        );
         return (
             studiengang === undefined ||
             studiengang === 'WI' ||
-            studiengang === 'IIB' || 
+            studiengang === 'IIB' ||
             studiengang === 'ET' ||
             studiengang === 'MB'
-        )
+        );
     }
 }

@@ -23,42 +23,35 @@ hide circle
 ' evtl. Prbleme mit Kraehenfuessen vermeiden
 skinparam linetype ortho
 
-entity "Buch" {
+entity "Student" {
   * id: integer <<generated>>
   --
   * version: integer
-  * isbn: text
-  * rating: number
-  * art: text
-  * preis: number
-  * rabatt: number
-  * lieferbar: boolean
-    datum: date
-    homepage: text
-  * **titel_id**: integer <<FK>>
-    schlagwoerter: text
-  * erzeugt: timestamp
-  * aktualisiert: timestamp
+  * matrikelnummer: integer
+  * studiengang: Studiengang
+  * guthaben: integer
+  * bd: date
+  * created: timestamp
+  * updated: timestamp
 }
 
-entity "Titel" {
+entity "Name" {
   * id: integer <<generated>>
   --
-  * titel: text
-    untertitel: text
+  * nachname: text
+    vorname: text
 }
 
-entity "Abbildung" {
+entity "Foto" {
   * id: integer <<generated>>
   --
   * beschriftung: text
     contentType: text
-  * **buch_id**: integer <<FK>>
+  * **student_id**: integer <<FK>>
 }
 
-Buch ||..|| Titel
-Buch ||..o{ Abbildung
+Student ||..|| Name
+Student ||..o{ Foto
 
-footer (c) Jürgen Zimmermann
 
 @enduml

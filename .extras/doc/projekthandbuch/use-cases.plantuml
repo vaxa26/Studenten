@@ -19,19 +19,14 @@
 
 actor Gast
 actor Admin
-actor Kunde
 
-rectangle buch {
-    Gast --> (Buch suchen)
-    Admin --> (Buch suchen)
-    Admin --> (Buch anlegen)
-    Admin --> (Buch ändern)
-    Admin --> (Buch löschen)
-    Kunde --> (Buch suchen)
-    Kunde --> (Buch anlegen)
-    Kunde --> (Buch ändern)
+rectangle Student {
+    Gast --> (Student suchen)
+    Admin --> (Student suchen)
+    Admin --> (Student anlegen)
+    Admin --> (Student ändern)
+    Admin --> (Student löschen)
 }
 
-footer (c) Jürgen Zimmermann
 
 @enduml

@@ -1,9 +1,14 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Student } from "./studenten.entity.js";
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    OneToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Student } from './studenten.entity.js';
 
 @Entity()
 export class Name {
-
     @PrimaryGeneratedColumn()
     id: number | undefined;
 
@@ -13,14 +18,14 @@ export class Name {
     @Column('varchar')
     readonly nachname: string | undefined;
 
-    @OneToOne(() => Student,(student) =>student.name)
-    @JoinColumn({ name: 'student_id'})
+    @OneToOne(() => Student, (student) => student.name)
+    @JoinColumn({ name: 'student_id' })
     student: Student | undefined;
 
-    public toString= (): string =>
+    public toString = (): string =>
         JSON.stringify({
             id: this.id,
             vorname: this.vorname,
             nachname: this.nachname,
-        })
-}   
+        });
+}

@@ -23,64 +23,64 @@ actor RESTClient
 actor GraphQLClient
 
 node "Nest" {
-  [RequestLoggerMiddleware]
+    [RequestLoggerMiddleware]
 
-  [BuchController]
-  [BuchResolver]
+    [StudentController]
+    [StudentResolver]
 
-  [BuchService]
+    [StudentService]
 
-  [Repository<Buch>]
+    [Repository<Student>]
 
-  [MailService]
+    [MailService]
 }
 
 
 cloud {
-    [TypeORM]
+        [TypeORM]
 }
 
 cloud {
-    [nest-keycloak-connect]
+        [nest-keycloak-connect]
 }
 
 cloud {
-    [nodemailer]
+        [nodemailer]
 }
 
-database "DB buch" {
-    [Tabelle buch]
-    [Tabelle titel]
-    [Tabelle abbildung]
+database "DB student" {
+        [Tabelle student]
+        [Tabelle name]
+        [Tabelle foto]
 }
 
 node {
-    [Keycloak]
+        [Keycloak]
 }
 
 node {
-    [Mailserver]
+        [Mailserver]
 }
 
 RESTClient ~~> [RequestLoggerMiddleware]
 GraphQLClient ~~> [RequestLoggerMiddleware]
 
-[RequestLoggerMiddleware] ~~> [BuchController]
-[RequestLoggerMiddleware] ~~> [BuchResolver]
+[RequestLoggerMiddleware] ~~> [StudentController]
+[RequestLoggerMiddleware] ~~> [StudentResolver]
 
-[BuchController] ..> [BuchService]
-[BuchResolver] ..> [BuchService]
-[BuchService] ..> [Repository<Buch>]
+[StudentController] ..> [StudentService]
+[StudentResolver] ..> [StudentService]
+[StudentService] ..> [Repository<Student>]
 
-[Repository<Buch>] ~~> [TypeORM]
-[TypeORM] ~~> [Tabelle buch]
-[TypeORM] ~~> [Tabelle titel]
-[TypeORM] ~~> [Tabelle abbildung]
+[Repository<Student>] ~~> [TypeORM]
+[TypeORM] ~~> [Tabelle student]
+[TypeORM] ~~> [Tabelle name]
+[TypeORM] ~~> [Tabelle foto]
 
-[BuchController] ..> [nest-keycloak-connect]
+[StudentController] ..> [nest-keycloak-connect]
 [nest-keycloak-connect] ~~> [Keycloak]
 
-[BuchService] ..> [MailService]
+[StudentService] ..> [MailService]
 [MailService] ~~> [nodemailer]
 [nodemailer] ~~> [Mailserver]
 

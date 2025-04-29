@@ -5,7 +5,7 @@ export class matrikelnrException extends HttpException {
 
     constructor(matrikelnr: number) {
         super(
-            `Die ISBN-Nummer ${matrikelnr} existiert bereits.`,
+            `Die Matrikel-Nummer ${matrikelnr} existiert bereits.`,
             HttpStatus.UNPROCESSABLE_ENTITY,
         );
         this.matrikelnr = matrikelnr;
