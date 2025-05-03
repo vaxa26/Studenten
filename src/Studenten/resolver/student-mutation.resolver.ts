@@ -114,6 +114,7 @@ export class StudentMutationResolver {
             bd: studentDTO.bd,
             name,
             fotos,
+            file: undefined,
             created: new Date(),
             updated: new Date(),
         };
@@ -132,6 +133,7 @@ export class StudentMutationResolver {
             bd: studentDTO.bd,
             name: undefined,
             fotos: undefined,
+            file: undefined,
             created: undefined,
             updated: new Date(),
         };

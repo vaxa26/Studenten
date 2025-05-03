@@ -5,6 +5,9 @@ import { QueryBuilder } from './query-builder.js';
 import { Suchkriterien } from './suchkriterien.js';
 import { Pageable } from './pageable.js';
 import { Slice } from './slice.js';
+import { Repository } from 'typeorm';
+import { StudentFile } from '../entity/studentFile.entity.js';
+import { InjectRepository } from '@nestjs/typeorm';
 
 export type FindByIdParams = {
     readonly id: number;
@@ -17,10 +20,13 @@ export class StudentReadService {
 
     readonly #queryBuilder: QueryBuilder;
 
+    readonly #fileRepo: Repository<StudentFile>;
+
     readonly #logger = getLogger(StudentReadService.name);
 
-    constructor(queryBuilder: QueryBuilder) {
+    constructor(queryBuilder: QueryBuilder, @InjectRepository(StudentFile) fileRepo: Repository<StudentFile>) {
         this.#queryBuilder = queryBuilder;
+        this.#fileRepo = fileRepo;
     }
 
     async findById({
@@ -49,6 +55,26 @@ export class StudentReadService {
         }
         return student;
     }
+
+    async findFileByStudentId(
+        studentId: number,
+    ): Promise<Readonly<StudentFile> | undefined> {
+        this.#logger.debug('findFileByStudentId: studentId=%d', studentId);
+        const studentFile = await this.#fileRepo
+            .createQueryBuilder('student_file')
+            .where('student_id = :id', { id: studentId })
+            .getOne();
+        if (studentFile === null) {
+            this.#logger.debug('findFileByStudentId: kein StudentFile gefunden');
+            return;
+        }
+
+        this.#logger.debug('findFileByStudentId: studentFile=%o', studentFile.filename);
+        return studentFile;
+    }
+
+
+
 
     async find(
         suchkriterien: Suchkriterien | undefined,

@@ -19,7 +19,7 @@ export class Foto {
     readonly contentType: string | undefined;
 
     @ManyToOne(() => Student, (student) => student.fotos)
-    @JoinColumn({ name: 'student_id ' })
+    @JoinColumn({ name: 'student_id' })
     student: Student | undefined;
 
     public toString = (): string =>

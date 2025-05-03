@@ -27,7 +27,7 @@ export class QueryBuilder {
 
     readonly #nameAlias = `${Name.name
         .charAt(0)
-        .toLowerCase()}${Name.name.slice(1)}}`;
+        .toLowerCase()}${Name.name.slice(1)}`;
 
     readonly #fotoAlias = `${Foto.name
         .charAt(0)
@@ -81,11 +81,22 @@ export class QueryBuilder {
             const ilike =
                 typeOrmModuleOptions.type === 'postgres' ? 'ilike' : 'like';
             queryBuilder = queryBuilder.where(
-                `${this.#nameAlias}.name ${ilike} :name`,
-                { name: `${name}` },
+                `${this.#nameAlias}.vorname ${ilike} :name`,
+                { name: `%${name}%` },
             );
             useWhere = false;
         }
+
+        if (name !== undefined && typeof name === 'string') {
+            const ilike =
+                typeOrmModuleOptions.type === 'postgres' ? 'ilike' : 'like';
+            queryBuilder = queryBuilder.where(
+                `${this.#nameAlias}.nachname ${ilike} :name`,
+                { name: `%${name}%` },
+            );
+            useWhere = false;
+        }
+
 
         if (matrikelnr !== undefined) {
             const matrikelnrNumber =

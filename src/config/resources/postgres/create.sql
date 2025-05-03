@@ -27,3 +27,13 @@ CREATE TABLE IF NOT EXISTS foto (
 ) TABLESPACE studentspace;
 
 CREATE INDEX IF NOT EXISTS foto_student_id_idx ON foto(student_id) TABLESPACE studentspace;
+
+CREATE TABLE IF NOT EXISTS student_file (
+    id              integer GENERATED ALWAYS AS IDENTITY(START WITH 1000) PRIMARY KEY USING INDEX TABLESPACE studentspace,
+    data            bytea NOT NULL,
+    filename        text NOT NULL,
+    mimetype        text,
+    student_id      integer NOT NULL REFERENCES student
+) TABLESPACE studentspace;
+
+CREATE INDEX IF NOT EXISTS student_file_student_id_idx ON student_file(student_id) TABLESPACE studentspace;

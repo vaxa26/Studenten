@@ -11,6 +11,8 @@ import {
     VersionInvalidException,
     VersionOutdatedException,
 } from './exceptions.js';
+import { StudentFile } from '../entity/studentFile.entity.js';
+
 
 export type UpdateParams = {
     readonly id: number | undefined;
@@ -26,16 +28,20 @@ export class StudentWriteService {
 
     readonly #readService: StudentReadService;
 
+    readonly #fileRepo: Repository<StudentFile>;
+
     //TODO Mailservice
 
     readonly #logger = getLogger(StudentWriteService.name);
 
     constructor(
         @InjectRepository(Student) repo: Repository<Student>,
+        @InjectRepository(StudentFile) fileRepo: Repository<StudentFile>,
         readservice: StudentReadService,
         //TODO Mailservice
     ) {
         this.#repo = repo;
+        this.#fileRepo = fileRepo;
         this.#readService = readservice;
         //TODO mail
     }
@@ -46,6 +52,41 @@ export class StudentWriteService {
 
         const studentDb = await this.#repo.save(student);
         return studentDb.id!;
+    }
+
+    async addFile(
+        studentId: number,
+        data: Buffer,
+        filename: string,
+        mimetype: string,
+    ): Promise<Readonly<StudentFile>> {
+        this.#logger.debug(
+            'addFile: studentId: %d, filename: %s, mimetype: %s',
+            studentId,
+            filename,
+            mimetype,
+        );
+
+        const student = await this.#readService.findById({ id: studentId});
+
+        await this.#fileRepo
+            .createQueryBuilder('student_file')
+            .delete()
+            .where('student_id = :id', { id: studentId })
+            .execute();
+        const studentFile = this.#fileRepo.create({
+            filename,
+            data,
+            mimetype,
+            student,
+        });
+
+        await this.#repo.save({
+            id: student.id,
+            file: studentFile,
+        });
+
+        return studentFile;
     }
 
     async update({ id, student, version }: UpdateParams) {

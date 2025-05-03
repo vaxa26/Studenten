@@ -14,6 +14,7 @@ import { dbType } from '../../config/db.js';
 import { DecimalTransformer } from './decimal-transformer.js';
 import { Name } from './name.entity.js';
 import { Foto } from './foto.entity.js';
+import { StudentFile } from './studentFile.entity.js';
 
 export type studiengang = 'WI' | 'IIB' | 'ET' | 'MB';
 
@@ -56,6 +57,11 @@ export class Student {
         cascade: ['insert', 'remove'],
     })
     readonly fotos: Foto[] | undefined;
+
+    @OneToOne(() => StudentFile, (studenFile) => studenFile.student, {
+        cascade: ['insert', 'remove'],
+    })
+    readonly file: StudentFile | undefined;
 
     // - - -- - - - - - - - - - - - - - - - - - - - -- -
 

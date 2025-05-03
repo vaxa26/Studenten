@@ -29,6 +29,8 @@ import { LoggerModule } from './logger/logger.module.js';
 import { RequestLoggerMiddleware } from './logger/request-logger.middleware.js';
 import { KeycloakModule } from './security/keycloak/keycloak.module.js';
 import { StudentModule } from './Studenten/student.module.js';
+import { StudentGetController } from './Studenten/controller/student-get.controller.js';
+import { StudentWriteController } from './Studenten/controller/student-write.controller.js';
 
 @Module({
     imports: [
@@ -43,6 +45,13 @@ import { StudentModule } from './Studenten/student.module.js';
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(RequestLoggerMiddleware).forRoutes('auth', 'graphql');
+        consumer
+            .apply(RequestLoggerMiddleware)
+            .forRoutes(
+                StudentGetController,
+                StudentWriteController,
+                'auth',
+                'graphql',
+            );
     }
 }

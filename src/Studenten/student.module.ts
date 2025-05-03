@@ -8,9 +8,12 @@ import { StudentMutationResolver } from './resolver/student-mutation.resolver.js
 import { QueryBuilder } from './service/query-builder.js';
 import { StudentReadService } from './service/student-read.service.js';
 import { StudentWriteService } from './service/student-write.service.js';
+import { StudentGetController } from './controller/student-get.controller.js';
+import { StudentWriteController } from './controller/student-write.controller.js';
 
 @Module({
     imports: [KeycloakModule, MailModule, TypeOrmModule.forFeature(entities)],
+    controllers: [StudentGetController, StudentWriteController],
     providers: [
         StudentReadService,
         StudentWriteService,
