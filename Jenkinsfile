@@ -217,7 +217,7 @@ pipeline {
                         }
                     }
                     // https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#zip-create-zip-file
-                    zip zipFile: 'student.zip', archive: false, dir: 'dist'
+                    zip zipFile: 'student.zip', dir: 'dist'
                     // jobs/buch/builds/.../archive/buch.zip
                     archiveArtifacts 'student.zip'
                 }
