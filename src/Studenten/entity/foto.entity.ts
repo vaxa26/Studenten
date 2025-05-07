@@ -12,7 +12,7 @@ export class Foto {
     @PrimaryGeneratedColumn()
     id: number | undefined;
 
-    @Column()
+    @Column('varchar')
     readonly beschriftung!: string;
 
     @Column('varchar')

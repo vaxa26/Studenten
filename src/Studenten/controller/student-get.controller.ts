@@ -14,7 +14,7 @@ import { Student, studiengang } from "../entity/studenten.entity.js";
 
 export class StudentQuery implements Suchkriterien {
     @ApiProperty({ required: false })
-    declare readonly matrikelnr?: number;
+    declare readonly matrikelnr?: string;
 
     @ApiProperty({ required: false })
     declare readonly studiengang?: studiengang;

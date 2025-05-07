@@ -12,7 +12,7 @@ export class Name {
     @PrimaryGeneratedColumn()
     id: number | undefined;
 
-    @Column()
+    @Column('varchar')
     readonly vorname!: string;
 
     @Column('varchar')

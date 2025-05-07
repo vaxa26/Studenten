@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class matrikelnrException extends HttpException {
-    readonly matrikelnr;
+    readonly matrikelnr : string | undefined;
 
-    constructor(matrikelnr: number) {
+    constructor(matrikelnr: string | undefined) {
         super(
             `Die Matrikel-Nummer ${matrikelnr} existiert bereits.`,
             HttpStatus.UNPROCESSABLE_ENTITY,

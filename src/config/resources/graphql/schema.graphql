@@ -4,7 +4,7 @@ schema {
 }
 
 type Query {
-  studenten(suchkriteiern: SuchkriterienInput): [Student!]
+  studenten(suchkriterien: SuchkriterienInput): [Student!]
 
   student(id: ID!): Student
 }
@@ -33,7 +33,7 @@ type Foto {
 type Student {
   id: Int!
   version: Int!
-  matrikelnr: Int!
+  matrikelnr: String!
   studiengang: Studiengang
   guthaben: Float!
   bd: String

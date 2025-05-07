@@ -60,13 +60,12 @@ export class QueryBuilder {
     }
 
     build(
-        { name, matrikelnr, guthaben, ...restProps }: Suchkriterien,
+        { name, guthaben, ...restProps }: Suchkriterien,
         pageable: Pageable,
     ) {
         this.#logger.debug(
-            'build: name=%s, matrikelnr=%s, guthaben=%s, restProps=%o, pageable=%o',
+            'build: name=%s, guthaben=%s, restProps=%o, pageable=%o',
             name,
-            matrikelnr,
             guthaben,
             restProps,
             pageable,
@@ -81,34 +80,10 @@ export class QueryBuilder {
             const ilike =
                 typeOrmModuleOptions.type === 'postgres' ? 'ilike' : 'like';
             queryBuilder = queryBuilder.where(
-                `${this.#nameAlias}.vorname ${ilike} :name`,
-                { name: `%${name}%` },
-            );
-            useWhere = false;
-        }
-
-        if (name !== undefined && typeof name === 'string') {
-            const ilike =
-                typeOrmModuleOptions.type === 'postgres' ? 'ilike' : 'like';
-            queryBuilder = queryBuilder.where(
                 `${this.#nameAlias}.nachname ${ilike} :name`,
                 { name: `%${name}%` },
             );
             useWhere = false;
-        }
-
-
-        if (matrikelnr !== undefined) {
-            const matrikelnrNumber =
-                typeof matrikelnr === 'string'
-                    ? parseInt(matrikelnr)
-                    : matrikelnr;
-            if (!isNaN(matrikelnrNumber)) {
-                queryBuilder = queryBuilder.where(
-                    `${this.#studentAlias}.matrikelnr >=${matrikelnrNumber}`,
-                );
-                useWhere = false;
-            }
         }
 
         //::::::::SCHLAGWÖRTER TODO:::::::::::::::

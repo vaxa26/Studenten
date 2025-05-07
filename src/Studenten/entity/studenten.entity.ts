@@ -26,9 +26,9 @@ export class Student {
     @VersionColumn()
     readonly version: number | undefined;
 
-    @Column('int')
-    @ApiProperty({ example: 12345, type: Number })
-    readonly matrikelnr!: number;
+    @Column('varchar')
+    @ApiProperty({ example: 12345, type: String })
+    readonly matrikelnr!: string | undefined;
 
     @Column('varchar')
     @ApiProperty({ example: 'WI', type: String })

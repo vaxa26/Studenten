@@ -42,9 +42,8 @@ class DecimalMin implements ValidatorConstraintInterface {
 }
 
 export class StudentOhneRef {
-
-    @ApiProperty({ example: 88283, type: Number })
-    readonly matrikelnr!: number;
+    @ApiProperty({ example: 88283, type: String })
+    readonly matrikelnr!: string ;
 
     @Matches(/^(WI|IIB|ET|MB)$/u)
     @IsOptional()
