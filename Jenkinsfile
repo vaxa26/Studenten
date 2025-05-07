@@ -67,7 +67,7 @@ pipeline {
                 // Unterverzeichnisse src und test im WORKSPACE loeschen: vom letzten Build
                 // Kurzform fuer: sh([script: '...'])
                 sh 'rm -rf src'
-                sh 'rm -rf __tests__'
+                sh 'rm -rf tests'
                 sh 'rm -rf node_modules'
                 sh 'rm -rf dist'
                 sh 'rm -rf .extras/doc/api'
@@ -76,7 +76,7 @@ pipeline {
 
                 // https://www.jenkins.io/doc/pipeline/steps/git
                 // "named arguments" statt Funktionsaufruf mit Klammern
-                git url: 'https://github.com/juergenzimmermann/buch', branch: 'main', poll: true
+                git url: 'https://github.com/vaxa26/Studenten', branch: 'main', poll: true
             }
         }
 
@@ -212,14 +212,14 @@ pipeline {
 
                 success {
                     script {
-                        if (fileExists("${env.WORKSPACE}/buch.zip")) {
-                            sh 'rm buch.zip'
+                        if (fileExists("${env.WORKSPACE}/student.zip")) {
+                            sh 'rm student.zip'
                         }
                     }
                     // https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#zip-create-zip-file
-                    zip zipFile: 'buch.zip', archive: false, dir: 'dist'
+                    zip zipFile: 'student.zip', archive: false, dir: 'dist'
                     // jobs/buch/builds/.../archive/buch.zip
-                    archiveArtifacts 'buch.zip'
+                    archiveArtifacts 'student.zip'
                 }
             }
         }
