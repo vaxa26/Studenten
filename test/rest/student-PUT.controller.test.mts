@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import client from 'prom-client';
 import { baseURL, httpsAgent } from '../constants.mts';
 import { inject } from 'vitest';
 import { HttpStatus } from '@nestjs/common';

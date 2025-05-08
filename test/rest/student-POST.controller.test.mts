@@ -1,6 +1,4 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { StudentDTO } from '../../src/Studenten/controller/studentDTO.entity.js';
-import Decimal from 'decimal.js';
 import { baseURL, httpsAgent } from '../constants.mts';
 import { HttpStatus } from '@nestjs/common';
 import { StudentReadService } from '../../src/Studenten/service/student-read.service.js';
@@ -33,23 +31,6 @@ const neuerStudentMitFehler: Record<string, unknown> = {
         nachname: 'Mustermann',
         vorname: 'Max',
     },
-};
-
-const neuerStudentmitMatexistiert: StudentDTO = {
-    matrikelnr: '66666',
-    studiengang: 'WI',
-    guthaben: new Decimal(221.22),
-    bd: '2004-07-26',
-    name: {
-        nachname: 'Mustermann',
-        vorname: 'Max',
-    },
-    fotos: [
-        {
-            beschriftung: 'Mein Bild',
-            contentType: 'img/png',
-        },
-    ],
 };
 
 describe('POST /rest', () => {
