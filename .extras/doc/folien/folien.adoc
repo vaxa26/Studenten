@@ -19,9 +19,9 @@
 
 // https://asciidoctor.org/docs/asciidoctor-revealjs
 
-= Beispiel mit Nest, REST, GraphQL, TypeORM, JWT und Jest
+= Beispiel mit Nest, REST, GraphQL, TypeORM, JWT und Vitest
 
-Jürgen Zimmermann <Juergen.Zimmermann@h-ka.de>
+VA
 
 == Gliederung
 
@@ -30,7 +30,7 @@ Jürgen Zimmermann <Juergen.Zimmermann@h-ka.de>
 * Nest und GraphQL
 * TypeORM
 * Security
-* Jest, Axios und Istanbul
+* Vitest und Axios
 * OpenAPI durch Swagger
 
 == Werkzeuge
@@ -50,7 +50,7 @@ Jürgen Zimmermann <Juergen.Zimmermann@h-ka.de>
 
 * VS Code
 * TypeScript und ES 2015+
-* ESLint und SonarQube
+* ESLint
 * Prettier
 * Postman
 
@@ -115,11 +115,10 @@ Jürgen Zimmermann <Juergen.Zimmermann@h-ka.de>
   - @Roles()
   - @Public()
 
-== Jest, Axios und Istanbul
+== Vitest, Axios 
 
-* Jest als Test-Framework zzgl. ts-jest
+* Vitest als Test-Framework zzgl. ts-jest
 * Axios für HTTP-Requests bei Integrationstests
-* Testabdeckung durch Istanbul
 
 == OpenAPI durch Swagger
 
