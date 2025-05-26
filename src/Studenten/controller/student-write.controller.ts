@@ -43,6 +43,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 const MSG_FORBIDDEN = 'You are not allowed to perform this action';
 
+/**
+ * Controller für Post, Put und Delete
+ */
 @Controller(paths.rest)
 @UseGuards(AuthGuard)
 @UseInterceptors(ResponseTimeInterceptor)
@@ -57,6 +60,13 @@ export class StudentWriteController {
         this.#service = service;
     }
 
+    /**
+     * Erstellt einen neuen Studenten.
+     * @param studentDTO - Die Daten des Studenten, die erstellt werden sollen.
+     * @param req - Die Anfrage, um die Basis-URI zu erstellen.
+     * @param res - Die Antwort, um den Status und die Location zu setzen.
+     * @returns Eine Response mit dem Status 201 Created und der Location des neuen Studenten.
+     */
     @Post()
     @Roles('admin', 'user')
     @ApiOperation({ summary: 'Create a new student' })
@@ -78,6 +88,14 @@ export class StudentWriteController {
         return res.location(location).send();
     }
 
+    /**
+     * Fügt eine Binärdatei zu einem Studenten hinzu.
+     * @param id id des Studenten, zu dem die Datei hinzugefügt werden soll.
+     * @param file Die hochgeladene Datei, die als Binärdatei gespeichert werden soll.
+     * @param req Request-Objekt von Express, um die Basis-URI zu erstellen.
+     * @param res Response-Objekt von Express, um den Status und die Location zu setzen.
+     * @returns Leeres Promise-Objekt.
+     */
     @Post(':id')
     @Public()
     @HttpCode(HttpStatus.NO_CONTENT)
@@ -119,6 +137,14 @@ export class StudentWriteController {
         return res.location(location).send();
     }
 
+    /**
+     * Vorhandener Studenten aktualisiert.
+     * @param studentDTO  Studenten-Daten ohne Referenzen.
+     * @param id Id eines Studenten, der aktualisiert werden soll.
+     * @param version Version des Studenten, die im Header If-Match übergeben wird.
+     * @param res Response-Objekt von Express, um den Status und die Header zu setzen.
+     * @returns Leeres Promise-Objekt.
+     */
     @Put(':id')
     @Roles('admin', 'user')
     @HttpCode(HttpStatus.NO_CONTENT)
@@ -171,6 +197,10 @@ export class StudentWriteController {
         return res.header('ETag', `"${newVersion}"`).send();
     }
 
+    /**
+     * Löscht einen Studenten anhand der ID.
+     * @param id ID des Studenten, der gelöscht werden soll.
+     */
     @Delete(':id')
     @Roles('admin')
     @HttpCode(HttpStatus.NO_CONTENT)
