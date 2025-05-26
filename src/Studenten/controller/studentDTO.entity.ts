@@ -16,7 +16,6 @@ import { Transform, Type } from 'class-transformer';
 import { FotoDTO } from './fotoDTO.entity.js';
 import { NameDTO } from './nameDTO.entity.js';
 
-
 const number2Decimal = ({ value }: { value: Decimal.Value | undefined }) => {
     if (value === undefined) {
         return;
@@ -43,7 +42,7 @@ class DecimalMin implements ValidatorConstraintInterface {
 
 export class StudentOhneRef {
     @ApiProperty({ example: 88283, type: String })
-    readonly matrikelnr!: string ;
+    readonly matrikelnr!: string;
 
     @Matches(/^(WI|IIB|ET|MB)$/u)
     @IsOptional()

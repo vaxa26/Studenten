@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class matrikelnrException extends HttpException {
-    readonly matrikelnr : string | undefined;
+    readonly matrikelnr: string | undefined;
 
     constructor(matrikelnr: string | undefined) {
         super(

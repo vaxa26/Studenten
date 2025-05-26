@@ -13,7 +13,6 @@ import {
 } from './exceptions.js';
 import { StudentFile } from '../entity/studentFile.entity.js';
 
-
 export type UpdateParams = {
     readonly id: number | undefined;
     readonly student: Student;
@@ -67,7 +66,7 @@ export class StudentWriteService {
             mimetype,
         );
 
-        const student = await this.#readService.findById({ id: studentId});
+        const student = await this.#readService.findById({ id: studentId });
 
         await this.#fileRepo
             .createQueryBuilder('student_file')

@@ -24,7 +24,10 @@ export class StudentReadService {
 
     readonly #logger = getLogger(StudentReadService.name);
 
-    constructor(queryBuilder: QueryBuilder, @InjectRepository(StudentFile) fileRepo: Repository<StudentFile>) {
+    constructor(
+        queryBuilder: QueryBuilder,
+        @InjectRepository(StudentFile) fileRepo: Repository<StudentFile>,
+    ) {
         this.#queryBuilder = queryBuilder;
         this.#fileRepo = fileRepo;
     }
@@ -65,16 +68,18 @@ export class StudentReadService {
             .where('student_id = :id', { id: studentId })
             .getOne();
         if (studentFile === null) {
-            this.#logger.debug('findFileByStudentId: kein StudentFile gefunden');
+            this.#logger.debug(
+                'findFileByStudentId: kein StudentFile gefunden',
+            );
             return;
         }
 
-        this.#logger.debug('findFileByStudentId: studentFile=%o', studentFile.filename);
+        this.#logger.debug(
+            'findFileByStudentId: studentFile=%o',
+            studentFile.filename,
+        );
         return studentFile;
     }
-
-
-
 
     async find(
         suchkriterien: Suchkriterien | undefined,

@@ -1,17 +1,40 @@
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiProperty, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Suchkriterien } from "../service/suchkriterien.js";
-import { Controller, Get, HttpStatus, Param, ParseIntPipe, Req, Res, Headers, UseInterceptors, Query, NotFoundException, StreamableFile } from "@nestjs/common";
-import { paths } from "../../config/paths.js";
-import { ResponseTimeInterceptor } from "../logger/response-time.interceptor.js";
-import { StudentReadService } from "../service/student-read.service.js";
-import { Public } from "nest-keycloak-connect";
+import {
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiOperation,
+    ApiParam,
+    ApiProperty,
+    ApiResponse,
+    ApiTags,
+} from '@nestjs/swagger';
+import { Suchkriterien } from '../service/suchkriterien.js';
+import {
+    Controller,
+    Get,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Req,
+    Res,
+    Headers,
+    UseInterceptors,
+    Query,
+    NotFoundException,
+    StreamableFile,
+} from '@nestjs/common';
+import { paths } from '../../config/paths.js';
+import { ResponseTimeInterceptor } from '../logger/response-time.interceptor.js';
+import { StudentReadService } from '../service/student-read.service.js';
+import { Public } from 'nest-keycloak-connect';
 import { Request, Response } from 'express';
-import { getLogger } from "../logger/logger.js";
-import { createPageable } from "../service/pageable.js";
+import { getLogger } from '../logger/logger.js';
+import { createPageable } from '../service/pageable.js';
 import { createPage } from './page.js';
-import { Readable } from "node:stream";
-import { Student, studiengang } from "../entity/studenten.entity.js";
-
+import { Readable } from 'node:stream';
+import { Student, studiengang } from '../entity/studenten.entity.js';
+/**
+ * Klasse für 'StudentGetController', für Queries in OpenApi bzw Swagger.
+ */
 export class StudentQuery implements Suchkriterien {
     @ApiProperty({ required: false })
     declare readonly matrikelnr?: string;
@@ -24,30 +47,42 @@ export class StudentQuery implements Suchkriterien {
 
     @ApiProperty({ required: false })
     declare readonly bd?: string | undefined;
-    
+
     @ApiProperty({ required: false })
     declare readonly name?: string;
 
     @ApiProperty({ required: false })
-    declare  size?: string;
+    declare size?: string;
 
     @ApiProperty({ required: false })
-    declare  page?: string;
-    
-}   
+    declare page?: string;
+}
 
+/**
+ * Controller Klasse um Studenten zu Verwalten.
+ */
 @Controller(paths.rest)
 @UseInterceptors(ResponseTimeInterceptor)
 @ApiTags('Student REST-API')
 export class StudentGetController {
-
     readonly #service: StudentReadService;
     readonly #logger = getLogger(StudentGetController.name);
 
     constructor(service: StudentReadService) {
-        this.#service = service;    
+        this.#service = service;
     }
 
+    /**
+     * Asynchrone Mehtode um Student nach ID zu Suchen.
+     * 304 für Not Modified
+     * 404 für Not Found
+     * 204 für erfolgreiche Suche
+     * @param id Pfad-Parameter.
+     * @param req Request Objekt.
+     * @param version Versionsnummer.
+     * @param res Leeres Response Objekt.
+     * @returns Leeres Promise-Objekt.
+     */
     @Get(':id')
     @Public()
     @ApiOperation({ summary: 'Get student by ID' })
@@ -66,7 +101,8 @@ export class StudentGetController {
         @Param(
             'id',
             new ParseIntPipe({
-                errorHttpStatusCode: HttpStatus.NOT_FOUND }),
+                errorHttpStatusCode: HttpStatus.NOT_FOUND,
+            }),
         )
         id: number,
         @Req() req: Request,
@@ -77,7 +113,7 @@ export class StudentGetController {
 
         if (req.accepts(['json', 'html']) === false) {
             this.#logger.debug('getById: accepted=%o', req.accepted);
-            return res.sendStatus(HttpStatus.NOT_ACCEPTABLE);      
+            return res.sendStatus(HttpStatus.NOT_ACCEPTABLE);
         }
 
         const student = await this.#service.findById({ id });
@@ -98,6 +134,14 @@ export class StudentGetController {
         return res.json(student);
     }
 
+    /**
+     * Suche Studenten mit Suchkriterien die mind. eins erfüllen.
+     * @param query Query-Objekt von Express.
+     * @param req Request-Objekt von Express.
+     * @param res Leeres Response-Objekt von Express.
+     * @returns Leeres Promise-Objekt.
+     */
+
     @Get()
     @Public()
     @ApiOperation({ summary: 'Get with suchkriterien students' })
@@ -111,7 +155,7 @@ export class StudentGetController {
 
         if (req.accepts(['json', 'html']) === false) {
             this.#logger.debug('get: accepted=%o', req.accepted);
-            return res.sendStatus(HttpStatus.NOT_ACCEPTABLE);      
+            return res.sendStatus(HttpStatus.NOT_ACCEPTABLE);
         }
 
         const { page, size } = query;
@@ -163,7 +207,7 @@ export class StudentGetController {
 
         const stream = Readable.from(studentFile.data);
         res.contentType(studentFile.mimetype ?? 'img/png').set({
-            'Content-Disposition': `attachment; filename="${studentFile.filename}"`,   // eslint-disable-line @typescript-eslint/naming-convention
+            'Content-Disposition': `attachment; filename="${studentFile.filename}"`, // eslint-disable-line @typescript-eslint/naming-convention
         });
         return new StreamableFile(stream);
     }

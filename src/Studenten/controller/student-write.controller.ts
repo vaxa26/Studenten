@@ -1,19 +1,45 @@
-import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNoContentResponse, ApiOperation, ApiParam, ApiPreconditionFailedResponse, ApiTags, ApiResponse } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse,
+    ApiBearerAuth,
+    ApiCreatedResponse,
+    ApiForbiddenResponse,
+    ApiNoContentResponse,
+    ApiOperation,
+    ApiParam,
+    ApiPreconditionFailedResponse,
+    ApiTags,
+    ApiResponse,
+} from '@nestjs/swagger';
 import { StudentWriteService } from '../service/student-write.service.js';
-import { Body, Controller, Delete, Headers, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
-import { AuthGuard, Public, Roles } from "nest-keycloak-connect";
-import { ResponseTimeInterceptor } from "../logger/response-time.interceptor.js";
-import { paths } from "../../config/paths.js";
-import { getLogger } from "../logger/logger.js";
-import { StudentDTO, StudentOhneRef } from "./studentDTO.entity.js";
-import { createBaseUri } from "./createBaseUri.js";
-import { Student } from "../entity/studenten.entity.js";
-import { type Name } from "../entity/name.entity.js";
-import { Foto } from "../entity/foto.entity.js";
-import Decimal from "decimal.js";
+import {
+    Body,
+    Controller,
+    Delete,
+    Headers,
+    HttpCode,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Post,
+    Put,
+    Req,
+    Res,
+    UploadedFile,
+    UseGuards,
+    UseInterceptors,
+} from '@nestjs/common';
+import { AuthGuard, Public, Roles } from 'nest-keycloak-connect';
+import { ResponseTimeInterceptor } from '../logger/response-time.interceptor.js';
+import { paths } from '../../config/paths.js';
+import { getLogger } from '../logger/logger.js';
+import { StudentDTO, StudentOhneRef } from './studentDTO.entity.js';
+import { createBaseUri } from './createBaseUri.js';
+import { Student } from '../entity/studenten.entity.js';
+import { type Name } from '../entity/name.entity.js';
+import { Foto } from '../entity/foto.entity.js';
+import Decimal from 'decimal.js';
 import { Express, Request, Response } from 'express';
-import { FileInterceptor } from "@nestjs/platform-express";
-
+import { FileInterceptor } from '@nestjs/platform-express';
 
 const MSG_FORBIDDEN = 'You are not allowed to perform this action';
 
@@ -23,7 +49,6 @@ const MSG_FORBIDDEN = 'You are not allowed to perform this action';
 @ApiTags('Student REST-API')
 @ApiBearerAuth()
 export class StudentWriteController {
-
     readonly #service: StudentWriteService;
 
     readonly #logger = getLogger(StudentWriteController.name);
@@ -43,7 +68,7 @@ export class StudentWriteController {
         @Req() req: Request,
         @Res() res: Response,
     ): Promise<Response> {
-        this.#logger.debug('post: studentDTO=%o', studentDTO);	
+        this.#logger.debug('post: studentDTO=%o', studentDTO);
 
         const student = this.#studentDtoToStudent(studentDTO);
         const id = await this.#service.create(student);
@@ -74,12 +99,12 @@ export class StudentWriteController {
         @UploadedFile() file: Express.Multer.File,
         @Req() req: Request,
         @Res() res: Response,
-    ):Promise<Response> {
+    ): Promise<Response> {
         this.#logger.debug(
             'addFile: id: %d, originalname=%s, mimetype=%s',
             id,
             file.originalname,
-            file.mimetype
+            file.mimetype,
         );
 
         await this.#service.addFile(
@@ -93,7 +118,6 @@ export class StudentWriteController {
         this.#logger.debug('addFile: location=%s', location);
         return res.location(location).send();
     }
-
 
     @Put(':id')
     @Roles('admin', 'user')
@@ -135,9 +159,10 @@ export class StudentWriteController {
             const msg = 'Header If-Match fehlt';
             this.#logger.debug('put: %s', msg);
             return res
-            .status(HttpStatus.PRECONDITION_FAILED).send()
-            .set('Content-Type', 'application/json')
-            .send(msg);
+                .status(HttpStatus.PRECONDITION_FAILED)
+                .send()
+                .set('Content-Type', 'application/json')
+                .send(msg);
         }
 
         const student = this.#studenDtoOhneRefToStudent(studentDTO);
@@ -146,22 +171,20 @@ export class StudentWriteController {
         return res.header('ETag', `"${newVersion}"`).send();
     }
 
-
     @Delete(':id')
     @Roles('admin')
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiOperation({ summary: 'Delete student by ID' })
     @ApiNoContentResponse({ description: 'Student deleted successfully' })
     @ApiForbiddenResponse({ description: MSG_FORBIDDEN })
-    async delete(@Param('id') id: number){
+    async delete(@Param('id') id: number) {
         this.#logger.debug('delete: id=%d', id);
         await this.#service.delete(id);
     }
 
-
     #studentDtoToStudent(studentDTO: StudentDTO): Student {
         const nameDTO = studentDTO.name;
-        const name : Name = {
+        const name: Name = {
             id: undefined,
             vorname: nameDTO.vorname,
             nachname: nameDTO.nachname,
@@ -188,7 +211,7 @@ export class StudentWriteController {
             file: undefined,
             created: new Date(),
             updated: new Date(),
-        }; 
+        };
         name.student = student;
         student.fotos?.forEach((foto) => {
             foto.student = student;
@@ -197,7 +220,7 @@ export class StudentWriteController {
     }
 
     #studenDtoOhneRefToStudent(studentDTO: StudentOhneRef): Student {
-        return{
+        return {
             id: undefined,
             version: undefined,
             matrikelnr: studentDTO.matrikelnr,

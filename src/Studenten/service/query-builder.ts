@@ -59,10 +59,7 @@ export class QueryBuilder {
         return queryBuilder;
     }
 
-    build(
-        { name, guthaben, ...restProps }: Suchkriterien,
-        pageable: Pageable,
-    ) {
+    build({ name, guthaben, ...restProps }: Suchkriterien, pageable: Pageable) {
         this.#logger.debug(
             'build: name=%s, guthaben=%s, restProps=%o, pageable=%o',
             name,
